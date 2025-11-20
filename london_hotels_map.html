@@ -1,80 +1,101 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>London Hotels - Google Maps</title>
-    <style>
-      #map {
-        height: 100vh;
-        width: 100%;
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>London Hotels - Points Map</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map("map").setView([51.509, -0.118], 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19
+    }).addTo(map);
+
+    // Hotel + points data
+    const hotels = [
+      { name: "The Waldorf Hilton London", points: 80000 },
+      { name: "Hampton By Hilton London Waterloo", points: 65000 },
+      { name: "The Academy London", points: 80000 },
+      { name: "Hilton London Bankside", points: 75000 },
+      { name: "Lost Property St Paul's London", points: 80000 },
+      { name: "DoubleTree by Hilton Hotel London - Marble Arch", points: 70000 },
+      { name: "The Prince Akatoki London", points: 95000 },
+      { name: "The Capital Hotel", points: 90000 },
+      { name: "DoubleTree by Hilton London Angel Kings Cross", points: 65000 },
+      { name: "Hilton London Tower Bridge", points: 70000 },
+      { name: "Hilton London Metropole", points: 60000 },
+      { name: "Doubletree By Hilton London Tower Of London", points: 65000 },
+      { name: "Hilton London Paddington Hotel", points: 70000 },
+      { name: "Hampton by Hilton London Old Street", points: 60000 },
+      { name: "Canopy by Hilton London City", points: 80000 },
+      { name: "Hart Shoreditch Hotel", points: 80000 },
+      { name: "Hampton by Hilton London City", points: 70000 },
+      { name: "DoubleTree by Hilton London Kensington", points: 70000 },
+      { name: "Hyde Park London Hotels", points: 65000 },
+      { name: "DoubleTree by Hilton London - Hyde Park", points: 65000 },
+      { name: "DoubleTree by Hilton London - Chelsea", points: 60000 }
+    ];
+
+    // Geocode + place markers
+    const markers = [];
+    let index = 0;
+
+    function geocodeNext() {
+      if (index >= hotels.length) {
+        if (markers.length > 0) {
+          const group = L.featureGroup(markers);
+          map.fitBounds(group.getBounds().pad(0.2));
+        }
+        return;
       }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
 
-    <script>
-      const hotels = [
-        "The Waldorf Hilton London",
-        "Hampton By Hilton London Waterloo",
-        "The Academy London",
-        "Hilton London Bankside",
-        "Lost Property St Paul's London - Curio Collection by Hilton",
-        "DoubleTree by Hilton Hotel London - Marble Arch",
-        "The Prince Akatoki London",
-        "The Capital Hotel, Apartments and Townhouse, London",
-        "DoubleTree by Hilton London Angel Kings Cross",
-        "Hilton London Tower Bridge",
-        "Hilton London Metropole",
-        "Doubletree By Hilton London Tower Of London",
-        "Hilton London Paddington Hotel",
-        "Hampton by Hilton London Old Street",
-        "Canopy by Hilton London City",
-        "Hart Shoreditch Hotel London, Curio Collection by Hilton",
-        "Hampton by Hilton London City",
-        "DoubleTree by Hilton London Kensington",
-        "Hyde Park London Hotels",
-        "DoubleTree by Hilton London - Hyde Park",
-        "DoubleTree by Hilton London - Chelsea"
-      ];
+      const hotel = hotels[index];
+      const url =
+        "https://nominatim.openstreetmap.org/search?format=json&q=" +
+        encodeURIComponent(hotel.name + ", London, UK");
 
-      function initMap() {
-        const map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: 51.509865, lng: -0.118092 },
-          zoom: 12
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+
+            const marker = L.marker([lat, lon]).addTo(map);
+            marker.bindPopup(
+  `<b>${hotel.name}</b>
+   <br>Points needed: ${hotel.points.toLocaleString()} pts
+   <br><i>For 27 Dec – 1 Jan (Hilton Official App)</i>`
+);
+            markers.push(marker);
+          }
+        })
+        .finally(() => {
+          index++;
+          setTimeout(geocodeNext, 1000);
         });
+    }
 
-        const geocoder = new google.maps.Geocoder();
-
-        hotels.forEach((name, index) => {
-          geocoder.geocode(
-            { address: name + ", London, UK" },
-            (results, status) => {
-              if (status === "OK" && results[0]) {
-                const marker = new google.maps.Marker({
-                  map: map,
-                  position: results[0].geometry.location
-                });
-
-                const info = new google.maps.InfoWindow({
-                  content: name
-                });
-
-                marker.addListener("click", () => {
-                  info.open(map, marker);
-                });
-              }
-            }
-          );
-        });
-      }
-    </script>
-
-    <!-- 🔴 這行很重要：請把 YOUR_API_KEY 換成你自己的 -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDHsH_xgzRqwEBU3l_MpRWhdDKFiMrtBA&callback=initMap"
-      async
-      defer
-    ></script>
-  </body>
+    geocodeNext();
+  </script>
+</body>
 </html>
