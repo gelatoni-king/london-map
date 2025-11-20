@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>London Hotels - Google Maps</title>
+    <style>
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script>
+      const hotels = [
+        "The Waldorf Hilton London",
+        "Hampton By Hilton London Waterloo",
+        "The Academy London",
+        "Hilton London Bankside",
+        "Lost Property St Paul's London - Curio Collection by Hilton",
+        "DoubleTree by Hilton Hotel London - Marble Arch",
+        "The Prince Akatoki London",
+        "The Capital Hotel, Apartments and Townhouse, London",
+        "DoubleTree by Hilton London Angel Kings Cross",
+        "Hilton London Tower Bridge",
+        "Hilton London Metropole",
+        "Doubletree By Hilton London Tower Of London",
+        "Hilton London Paddington Hotel",
+        "Hampton by Hilton London Old Street",
+        "Canopy by Hilton London City",
+        "Hart Shoreditch Hotel London, Curio Collection by Hilton",
+        "Hampton by Hilton London City",
+        "DoubleTree by Hilton London Kensington",
+        "Hyde Park London Hotels",
+        "DoubleTree by Hilton London - Hyde Park",
+        "DoubleTree by Hilton London - Chelsea"
+      ];
+
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 51.509865, lng: -0.118092 },
+          zoom: 12
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        hotels.forEach((name, index) => {
+          geocoder.geocode(
+            { address: name + ", London, UK" },
+            (results, status) => {
+              if (status === "OK" && results[0]) {
+                const marker = new google.maps.Marker({
+                  map: map,
+                  position: results[0].geometry.location
+                });
+
+                const info = new google.maps.InfoWindow({
+                  content: name
+                });
+
+                marker.addListener("click", () => {
+                  info.open(map, marker);
+                });
+              }
+            }
+          );
+        });
+      }
+    </script>
+
+    <!-- 🔴 這行很重要：請把 YOUR_API_KEY 換成你自己的 -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDHsH_xgzRqwEBU3l_MpRWhdDKFiMrtBA&callback=initMap"
+      async
+      defer
+    ></script>
+  </body>
+</html>
