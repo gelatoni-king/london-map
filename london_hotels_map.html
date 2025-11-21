@@ -15,28 +15,29 @@
 
   <script>
     const hotels = [
-      { name: "The Waldorf Hilton London", points: 80000 },
-      { name: "Hampton By Hilton London Waterloo", points: 65000 },
-      { name: "The Academy London", points: 80000 },
-      { name: "Hilton London Bankside", points: 75000 },
-      { name: "Lost Property St Paul's London", points: 80000 },
-      { name: "DoubleTree by Hilton Hotel London - Marble Arch", points: 70000 },
-      { name: "The Prince Akatoki London", points: 95000 },
-      { name: "The Capital Hotel", points: 90000 },
-      { name: "DoubleTree by Hilton London Angel Kings Cross", points: 65000 },
-      { name: "Hilton London Tower Bridge", points: 70000 },
-      { name: "Hilton London Metropole", points: 60000 },
-      { name: "Doubletree By Hilton London Tower Of London", points: 65000 },
-      { name: "Hilton London Paddington Hotel", points: 70000 },
-      { name: "Hampton by Hilton London Old Street", points: 60000 },
-      { name: "Canopy by Hilton London City", points: 80000 },
-      { name: "Hart Shoreditch Hotel", points: 80000 },
-      { name: "Hampton by Hilton London City", points: 70000 },
-      { name: "DoubleTree by Hilton London Kensington", points: 70000 },
-      { name: "Hyde Park London Hotels", points: 65000 },
-      { name: "DoubleTree by Hilton London - Hyde Park", points: 65000 },
-      { name: "DoubleTree by Hilton London - Chelsea", points: 60000 }
-    ];
+  { name: "The Waldorf Hilton London", points: 80000, price: "£498" },
+  { name: "Hampton By Hilton London Waterloo", points: 65000, price: "£340" },
+  { name: "The Academy London", points: 80000, price: "£446" },
+  { name: "Hilton London Bankside", points: 75000, price: "£409" },
+  { name: "Lost Property St Paul's London", points: 80000, price: "£308" },
+  { name: "DoubleTree by Hilton Hotel London - Marble Arch", points: 70000, price: "£343" },
+  { name: "The Prince Akatoki London", points: 95000, price: "£510" },
+  { name: "The Capital Hotel", points: 90000, price: "£638" },
+  { name: "DoubleTree by Hilton London Angel Kings Cross", points: 65000, price: "£305" },
+  { name: "Hilton London Tower Bridge", points: 70000, price: "£383" },
+  { name: "Hilton London Metropole", points: 60000, price: "£404" },
+  { name: "Doubletree By Hilton London Tower Of London", points: 65000, price: "£298" },
+  { name: "Hilton London Paddington Hotel", points: 70000, price: "£344" },
+  { name: "Hampton by Hilton London Old Street", points: 60000, price: "£234" },
+  { name: "Canopy by Hilton London City", points: 80000, price: "£349" },
+  { name: "Hart Shoreditch Hotel", points: 80000, price: "£316" },
+  { name: "Hampton by Hilton London City", points: 70000, price: "£244" },
+  { name: "DoubleTree by Hilton London Kensington", points: 70000, price: "£509" },
+  { name: "Hyde Park London Hotels", points: 65000, price: "£355" },
+  { name: "DoubleTree by Hilton London - Hyde Park", points: 65000, price: "£299" },
+  { name: "DoubleTree by Hilton London - Chelsea", points: 60000, price: "£257" }
+];
+
 
     function initMap() {
       const map = new google.maps.Map(document.getElementById("map"), {
@@ -58,9 +59,12 @@
 
               const info = new google.maps.InfoWindow({
                 content: `
-                  <b>${hotel.name}</b><br>
-                  Points needed: ${hotel.points.toLocaleString()} pts<br>
-                  <i>For 27 Dec – 1 Jan (Hilton App)</i>
+  <b>${hotel.name}</b><br>
+  Points needed: ${hotel.points.toLocaleString()} pts<br>
+  Cash price: ${hotel.price} (official app)<br>
+  <i>For 27 Dec – 1 Jan (Hilton App)</i>
+`
+
                 `
               });
 
